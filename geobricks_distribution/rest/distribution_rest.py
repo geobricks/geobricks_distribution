@@ -5,7 +5,7 @@ from flask import Response
 from flask import request
 from flask.ext.cors import cross_origin
 from geobricks_distribution.utils.log import logger
-from geobricks_distribution.core import distribution_core
+from geobricks_distribution.core.distribution_core import export_raster_by_spatial_query
 from geobricks_distribution.config.config import config
 from flask import request, send_from_directory
 
@@ -42,7 +42,7 @@ def get_rasters_spatial_query():
         user_json = request.get_json()
         distribution_url = request.host_url + "distribution/download/"
         distribution_folder = config["settings"]["folders"]["distribution"]
-        result = distribution_core.export_by_spatial_query(user_json, distribution_url, distribution_folder)
+        result = export_raster_by_spatial_query(user_json, distribution_url, distribution_folder)
         return Response(json.dumps(result), content_type='application/json; charset=utf-8')
     except Exception, e:
         raise Exception(e)

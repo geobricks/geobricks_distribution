@@ -4,7 +4,7 @@ import uuid
 from shutil import move
 from geobricks_distribution.config.config import config
 from geobricks_distribution.utils.log import logger
-from geobricks_distribution.utils.filesystem import get_raster_path_by_uid
+from geobricks_distribution.utils.filesystem import get_raster_path_by_uid, get_raster_path_by_ftp_uid
 from geobricks_distribution.utils import email_utils
 from geobricks_distribution.utils.filesystem import zip_files, get_filename
 
@@ -27,7 +27,7 @@ email_body = "<html><head></head>" \
              "</html>"
 
 
-def export_by_spatial_query(user_json, distribution_url, distribution_folder=None):
+def export_raster_by_spatial_query(user_json, distribution_url, distribution_folder=None):
     try:
         if distribution_folder is None:
             distribution_folder = config["settings"]["folders"]["distribution"]
@@ -42,8 +42,7 @@ def export_by_spatial_query(user_json, distribution_url, distribution_folder=Non
     # TODO remove dependency from here?
     db_spatial = DBMSPostgreSQL(config["settings"]["db"]["spatial"])
 
-    # TODO check if uids or paths (or both)
-    uids = user_json["raster"]["uids"]
+
     json_filter = json.loads(user_json["vector"])
     email_address = None if "email_address" not in user_json else user_json["email_address"]
 
@@ -57,11 +56,9 @@ def export_by_spatial_query(user_json, distribution_url, distribution_folder=Non
     os.mkdir(output_folder)
 
     output_files = []
-    for uid in uids:
-
-        raster_path = get_raster_path_by_uid(uid)
-        print raster_path
-
+    # gets all the raster paths
+    raster_paths = get_raster_paths(user_json["raster"])
+    for raster_path in raster_paths:
         authority_name, authority_code = get_authority(raster_path)
         log.info(db_spatial.schema)
         log.info(authority_name)
@@ -80,14 +77,10 @@ def export_by_spatial_query(user_json, distribution_url, distribution_folder=Non
         # move file to distribution tmp folder
         path, filename, name = get_filename(filepath, True)
         dst_file = os.path.join(output_folder, filename)
-        #dst_file = tmp_folder
-
-        log.info(filepath)
-        log.info(dst_file)
         move(filepath, dst_file)
 
         # rename file based on uid layer_name (i.e. fenix:trmm_08_2014 -> trmm_08_2014)
-        output_filename = uid.split("|")[1] + ".tif" if "|" in uid else uid.split(":")[1] + ".tif"
+        output_filename = get_filename(raster_path) + ".tif"
         output_file = os.path.join(output_folder, output_filename)
         os.rename(dst_file, output_file)
 
@@ -112,3 +105,18 @@ def export_by_spatial_query(user_json, distribution_url, distribution_folder=Non
         email_utils.send_email(email_user, email_address, email_password, email_header, html)
 
     return '{ "url" : "' + url + '"}'
+
+
+# gets all the rasters paths in the filesystem
+def get_raster_paths(data):
+    paths = []
+    if "uids" in data:
+        for uid in data["uids"]:
+            paths.append(get_raster_path_by_uid(uid))
+    if "ftp_uids" in data:
+        for uid in data["ftp_uids"]:
+            paths.append(get_raster_path_by_ftp_uid(uid))
+    if "paths" in data:
+        for path in data["paths"]:
+            paths.append(path)
+    return paths

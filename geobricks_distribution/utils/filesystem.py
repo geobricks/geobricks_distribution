@@ -7,10 +7,13 @@ from geobricks_distribution.config.config import config
 
 
 # temporary folder
-try:
-    folder_tmp_default = config["settings"]["folders"]["tmp"]
-except Exception:
-    folder_tmp_default = tempfile.gettempdir()
+folder_tmp_default = tempfile.gettempdir()
+
+# this doesn't work if "settings" are overwritten
+# try:
+#     folder_tmp_default = config["settings"]["folders"]["tmp"]
+# except Exception:
+#     folder_tmp_default = tempfile.gettempdir()
 
 
 def create_tmp_filename(extension='', filename='',  subfolder='', add_uuid=True, folder_tmp=folder_tmp_default):
@@ -46,9 +49,16 @@ def create_tmp_filename(extension='', filename='',  subfolder='', add_uuid=True,
         return (file_path + extension).encode('utf-8')
 
 
-def get_raster_path_by_uid(uid):
+# TODO: move it to the data manager?
+def get_raster_path_by_uid(uid, ext=".geotiff"):
     l = uid.split("|") if "|" in uid else uid.split(":")
-    return os.path.join(config["settings"]["folders"]["geoserver_datadir"], "data",  l[0], l[1], l[1] + ".geotiff");
+    return os.path.join(config["settings"]["folders"]["geoserver_datadir"], "data",  l[0], l[1], l[1] + ext);
+
+
+def get_raster_path_by_ftp_uid(uid, ext=".geotiff"):
+    l = uid.split("|") if "|" in uid else uid.split(":")
+    return os.path.join(config["settings"]["folders"]["ftp"], l[0], l[1], l[1] + ext)
+
 
 def zip_files(name, files, path=folder_tmp_default):
     extension = ".zip"
