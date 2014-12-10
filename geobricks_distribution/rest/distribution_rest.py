@@ -18,6 +18,7 @@ app = Blueprint("distribution", "distribution")
 
 zip_filename = "layers"
 
+
 @app.route('/discovery/')
 @app.route('/discovery')
 @cross_origin(origins='*')
@@ -31,6 +32,12 @@ def discovery():
         'description': 'Functionalities to distribute geospatial data.',
         'type': 'DISTRIBUTION'
     }
+    print "----"
+    print request.script_root
+    print request.path
+    print request.base_url
+    print request.url_root
+    print request.url
     return Response(json.dumps(out), content_type='application/json; charset=utf-8')
 
 
@@ -40,7 +47,7 @@ def discovery():
 def get_rasters_spatial_query():
     try:
         user_json = request.get_json()
-        distribution_url = request.host_url + "distribution/download/"
+        distribution_url = request.host_url + config["settings"]["base_url"] + "distribution/download/"
         distribution_folder = config["settings"]["folders"]["distribution"]
         result = export_raster_by_spatial_query(user_json, distribution_url, distribution_folder)
         return Response(json.dumps(result), content_type='application/json; charset=utf-8')
@@ -59,3 +66,4 @@ def get_zip_file(id):
     except Exception, e:
         log.error(e)
         raise Exception(e)
+

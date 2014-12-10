@@ -29,6 +29,7 @@ email_body = "<html><head></head>" \
 
 def export_raster_by_spatial_query(user_json, distribution_url, distribution_folder=None):
     try:
+        log.info(config["settings"])
         if distribution_folder is None:
             distribution_folder = config["settings"]["folders"]["distribution"]
         if not os.path.isdir(distribution_folder):
@@ -36,8 +37,6 @@ def export_raster_by_spatial_query(user_json, distribution_url, distribution_fol
     except Exception, e:
         log.error(e)
         raise Exception(e)
-
-    print config["settings"]["db"]["spatial"]
 
     # TODO remove dependency from here?
     db_spatial = DBMSPostgreSQL(config["settings"]["db"]["spatial"])
@@ -57,9 +56,13 @@ def export_raster_by_spatial_query(user_json, distribution_url, distribution_fol
 
     output_files = []
     # gets all the raster paths
+    log.info(user_json["raster"])
     raster_paths = get_raster_paths(user_json["raster"])
+    log.info(raster_paths)
     for raster_path in raster_paths:
-        authority_name, authority_code = get_authority(raster_path)
+        log.info(raster_path)
+        authority_name, authority_code = get_authority(raster_path).upper().split(":")
+        log.info(authority_name, authority_code)
         log.info(db_spatial.schema)
         log.info(authority_name)
         log.info(authority_code)
@@ -112,6 +115,7 @@ def get_raster_paths(data):
     paths = []
     if "uids" in data:
         for uid in data["uids"]:
+            log.info(uid)
             paths.append(get_raster_path_by_uid(uid))
     if "ftp_uids" in data:
         for uid in data["ftp_uids"]:

@@ -51,12 +51,14 @@ def create_tmp_filename(extension='', filename='',  subfolder='', add_uuid=True,
 
 # TODO: move it to the data manager?
 def get_raster_path_by_uid(uid, ext=".geotiff"):
-    l = uid.split("|") if "|" in uid else uid.split(":")
+    l = uid.split("@") if "@" in uid else uid.split(":")
+    print l
+    print config["settings"]["folders"]
     return os.path.join(config["settings"]["folders"]["geoserver_datadir"], "data",  l[0], l[1], l[1] + ext);
 
 
 def get_raster_path_by_ftp_uid(uid, ext=".geotiff"):
-    l = uid.split("|") if "|" in uid else uid.split(":")
+    l = uid.split("@") if "@" in uid else uid.split(":")
     return os.path.join(config["settings"]["folders"]["ftp"], l[0], l[1], l[1] + ext)
 
 
@@ -69,7 +71,7 @@ def zip_files(name, files, path=folder_tmp_default):
     zip_subdir = path
     for fpath in files:
         fdir, fname = os.path.split(fpath)
-       #Add file, at correct path
+        #Add file, at correct path
         zf.write(fpath, fname)
     zf.close()
     return zip_path
@@ -87,5 +89,4 @@ def get_filename(filepath, extension=False):
         return path, filename, name
     else:
         return name
-
 
