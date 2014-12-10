@@ -7,7 +7,10 @@ from geobricks_distribution.config.config import config
 
 
 # temporary folder
-folder_tmp_default = tempfile.gettempdir()
+try:
+    folder_tmp_default = config["settings"]["folders"]["tmp"]
+except Exception, e:
+    folder_tmp_default = tempfile.gettempdir()
 
 try:
     workspace_layer_separator = config["settings"]["folders"]["workspace_layer_separator"]
@@ -92,4 +95,3 @@ def get_filename(filepath, extension=False):
         return path, filename, name
     else:
         return name
-
