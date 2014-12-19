@@ -3,9 +3,9 @@ import json
 import uuid
 from shutil import move
 from geobricks_distribution.config.config import config
-from geobricks_core.core.log import logger
-from geobricks_core.core.filesystem import get_raster_path_by_uid, get_raster_path_by_ftp_uid, zip_files, get_filename
-from geobricks_core.core.email_utils import send_email
+from geobricks_common.core.log import logger
+from geobricks_common.core.filesystem import get_raster_path_by_uid, get_raster_path_by_ftp_uid, zip_files, get_filename
+from geobricks_common.core.email_utils import send_email
 
 # TODO: remove dependencies
 from geobricks_gis_raster.core.raster import get_authority, crop_by_vector_database

@@ -7,3 +7,4 @@ v0.1.5, 10-12-2014 -- fixed nginx url detection.
 v0.1.6, 10-12-2014 -- updated filesystem.
 v0.1.7, 10-12-2014 -- quick fix for demo.
 v0.1.8, 19-12-2014 -- Added GeobricksCore requirement.
+v0.1.9, 19-12-2014 -- Changed to GeobricksCommon dependency.
