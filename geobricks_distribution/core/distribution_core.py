@@ -3,10 +3,9 @@ import json
 import uuid
 from shutil import move
 from geobricks_distribution.config.config import config
-from geobricks_distribution.utils.log import logger
-from geobricks_distribution.utils.filesystem import get_raster_path_by_uid, get_raster_path_by_ftp_uid
-from geobricks_distribution.utils import email_utils
-from geobricks_distribution.utils.filesystem import zip_files, get_filename
+from geobricks_core.core.log import logger
+from geobricks_core.core.filesystem import get_raster_path_by_uid, get_raster_path_by_ftp_uid, zip_files, get_filename
+from geobricks_core.core.email_utils import send_email
 
 # TODO: remove dependencies
 from geobricks_gis_raster.core.raster import get_authority, crop_by_vector_database
@@ -105,7 +104,7 @@ def export_raster_by_spatial_query(user_json, distribution_url, distribution_fol
         html = email_body.replace("{{LINK}}", url)
         email_user = config["settings"]["email"]["user"]
         email_password = config["settings"]["email"]["password"]
-        email_utils.send_email(email_user, email_address, email_password, email_header, html)
+        send_email(email_user, email_address, email_password, email_header, html)
 
     return '{ "url" : "' + url + '"}'
 
