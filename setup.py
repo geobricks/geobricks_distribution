@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
     name='GeobricksDistribution',
-    version='0.1.9',
+    version='0.1.10',
     author='Simone Murzilli; Guido Barbaglia',
     author_email='geobrickspy@gmail.com',
     packages=find_packages(),
@@ -12,7 +12,7 @@ setup(
     description='Geobricks geospatial data distribution library.',
     install_requires=[
         'flask',
-        'GeobricksCore',
+        'GeobricksCommon',
         'GeobricksDBMS',
         "GeobricksGISRaster"
     ],
