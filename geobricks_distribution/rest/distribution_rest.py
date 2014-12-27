@@ -66,30 +66,3 @@ def get_zip_file(id):
     except Exception, e:
         log.error(e)
         raise Exception(e)
-
-
-# TODO: remove it from here. Quick add for ghg-demo
-from geobricks_dbms.core.dbms_postgresql import DBMSPostgreSQL
-
-@app.route('/db/<datasource>/<query>/', methods=['GET'])
-@app.route('/db/<datasource>/<query>', methods=['GET'])
-@cross_origin(origins='*', headers=['Content-Type'])
-def query_db(datasource, query):
-    """
-    Query the PostGIS with a custom query
-    :param datasource: postgis/postgres datasource
-    :param query: query to be passed to the db
-    :return:
-    """
-    # TODO it's not used the schema in the query.
-    # it should be replaced if the query contains {{SCHEMA}} or something like that
-    try:
-        spatial_db = DBMSPostgreSQL(config["settings"]["db"][datasource])
-        log.info("spatial_db")
-        log.info(spatial_db)
-        result = spatial_db.query(query)
-        log.info(result)
-        return Response(json.dumps(result), content_type='application/json; charset=utf-8')
-    except Exception, e:
-        log.error(e)
-        raise Exception(e)
