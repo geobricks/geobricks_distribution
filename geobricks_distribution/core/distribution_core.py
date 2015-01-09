@@ -4,7 +4,7 @@ import uuid
 from shutil import move
 from geobricks_distribution.config.config import config
 from geobricks_common.core.log import logger
-from geobricks_common.core.filesystem import get_raster_path_by_uid, get_raster_path_by_ftp_uid, zip_files, get_filename
+from geobricks_common.core.filesystem import get_raster_path, zip_files, get_filename
 from geobricks_common.core.email_utils import send_email
 
 # TODO: remove dependencies
@@ -115,10 +115,10 @@ def get_raster_paths(data):
     if "uids" in data:
         for uid in data["uids"]:
             log.info(uid)
-            paths.append(get_raster_path_by_uid(uid))
+            paths.append(get_raster_path({"uid": uid}))
     if "ftp_uids" in data:
         for uid in data["ftp_uids"]:
-            paths.append(get_raster_path_by_ftp_uid(uid))
+            paths.append(get_raster_path({"uid": uid}))
     if "paths" in data:
         for path in data["paths"]:
             paths.append(path)
