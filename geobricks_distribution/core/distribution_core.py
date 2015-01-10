@@ -69,11 +69,9 @@ class Distribution():
         output_files = []
         for raster in rasters:
             raster_path = get_raster_path(raster)
-            print raster_path
             # turning relative to absolute path if required
             if not os.path.isabs(raster_path):
                 raster_path = os.path.abspath(raster_path)
-            print raster_path
             log.info(raster_path)
             srid = get_srid(raster_path)
             log.info(srid)
@@ -91,7 +89,7 @@ class Distribution():
             db = sq.get_db_instance()
             db_connection_string = db.get_connection_string(True)
             query = sq.get_query_string_select_all(db_datasource, layer_code, column_code, codes, "*")
-            print query
+            log.info(query)
             filepath = crop_raster_on_vector_bbox_and_postgis_db(raster_path, db_connection_string, query, bbox[0][0], bbox[0][1], bbox[1][0], bbox[1][1])
             # bounding_box = crop_raster_with_bounding_box(raster_path, bbox[0][0], bbox[0][1], bbox[1][0], bbox[1][1])
 
@@ -147,7 +145,7 @@ class Distribution():
         sq = SpatialQuery(self.config)
         db_spatial = sq.get_db_instance()
 
-        print user_json
+        # json passed by the user
         json_filter = user_json["vector"]
         email_address = None if "email_address" not in user_json else user_json["email_address"]
 
