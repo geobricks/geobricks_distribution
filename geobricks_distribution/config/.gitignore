@@ -1,1 +1,2 @@
-*.pyc
+config_*.pyc
+config_*.py

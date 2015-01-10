@@ -20,12 +20,7 @@ config = {
 
         #folders
         "folders": {
-            "tmp": "/tmp",
-            "geoserver_datadir": "../test_data/geoserver_data_dir/",
             "distribution": "../test_data/distribution/",
-            "storage": "../test_data/storage/",
-            # this is used by the filesystem to get the (published) layers in the file system
-            "workspace_layer_separator": ":"
         },
 
         # Database
@@ -36,7 +31,7 @@ config = {
                 "dbname": "fenix",
                 "host": "localhost",
                 "port": "5432",
-                "username": "user",
+                "username": "usr",
                 "password": "pwd",
                 "schema": "public",
             }
