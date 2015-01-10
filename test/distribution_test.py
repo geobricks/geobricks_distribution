@@ -30,7 +30,7 @@ json_request = {
                 "db": "spatial",    #optional
                 "layer": "gaul0_3857",   # required (table or table alias)
                 "column": "adm0_name", # required (column or column_alias)
-                "codes": ["China"]
+                "codes": ["Italy"]
             }
         }
 }
