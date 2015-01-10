@@ -4,8 +4,8 @@ from flask import Blueprint
 from flask import Response
 from flask import request
 from flask.ext.cors import cross_origin
-from geobricks_distribution.utils.log import logger
-from geobricks_distribution.core.distribution_core import export_raster_by_spatial_query
+from geobricks_common.core.log import logger
+from geobricks_distribution.core.distribution_core import Distribution
 from geobricks_distribution.config.config import config
 from flask import request, send_from_directory
 
@@ -32,12 +32,6 @@ def discovery():
         'description': 'Functionalities to distribute geospatial data.',
         'type': 'DISTRIBUTION'
     }
-    print "----"
-    print request.script_root
-    print request.path
-    print request.base_url
-    print request.url_root
-    print request.url
     return Response(json.dumps(out), content_type='application/json; charset=utf-8')
 
 
@@ -48,8 +42,8 @@ def get_rasters_spatial_query():
     try:
         user_json = request.get_json()
         distribution_url = request.host_url + config["settings"]["base_url"] + "distribution/download/"
-        distribution_folder = config["settings"]["folders"]["distribution"]
-        result = export_raster_by_spatial_query(user_json, distribution_url, distribution_folder)
+        distribution = Distribution(config)
+        result = distribution.export_raster_by_spatial_query(user_json, distribution_url)
         return Response(json.dumps(result), content_type='application/json; charset=utf-8')
     except Exception, e:
         raise Exception(e)
