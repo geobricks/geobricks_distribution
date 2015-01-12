@@ -2,8 +2,13 @@ import unittest
 import os
 import requests
 import simplejson
+from geobricks_common.core.log import logger
 from geobricks_distribution.config.config import config
 from geobricks_distribution.core.distribution_core import Distribution
+
+log = logger(__file__)
+
+#### N.B. to run all the tests, run the distribution_main.py SERVICE
 
 
 json_request = {
@@ -46,18 +51,27 @@ class GeobricksTest(unittest.TestCase):
         self.assertEqual(os.path.isfile(result), True)
 
     def test_distribution_raster_spatialquery_rest(self):
+        try:
+            requests.get("http://localhost:5904/distribution/discovery")
+        except Exception:
+            log.warn("Service is down. Please run rest/distribution_main.py to run the test")
         headers = {'content-type': 'application/json'}
         data = simplejson.dumps(json_request)
         r = requests.post("http://localhost:5904/distribution/rasters/spatialquery/", data=data, headers=headers)
-        self.assertIsNotNone(200, r.status_code)
+        self.assertEqual(200, r.status_code)
 
     def test_distribution_download_rest(self):
+        try:
+            requests.get("http://localhost:5904/distribution/discovery")
+        except Exception, e:
+            log.warn("Service is down. Please run rest/distribution_main.py to run the test")
+
         headers = {'content-type': 'application/json'}
         data = simplejson.dumps(json_request)
         r = requests.post("http://localhost:5904/distribution/rasters/spatialquery/", data=data, headers=headers)
         uid = simplejson.loads(simplejson.loads(r.text))
-        r = requests.get( uid["url"])
-        self.assertIsNotNone(200, r.status_code)
+        r = requests.get(uid["url"])
+        self.assertEqual(200, r.status_code)
 
 
 if __name__ == '__main__':

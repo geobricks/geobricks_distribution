@@ -31,7 +31,7 @@ def discovery():
     out = {
         'name': 'Distribution service',
         'description': 'Functionalities to distribute geospatial data.',
-        'type': 'DISTRIBUTION'
+        'type': 'SERVICE'
     }
     return Response(json.dumps(out), content_type='application/json; charset=utf-8')
 
@@ -42,7 +42,6 @@ def discovery():
 def get_rasters_spatial_query():
     try:
         user_json = request.get_json()
-        print "->" , config["settings"]
         #TODO: handle it nicer the url to set the distribution download url
         base_url = config["settings"]["base_url"] if "base_url" in config["settings"] else ""
         distribution_url = request.host_url + base_url + "distribution/download/"
