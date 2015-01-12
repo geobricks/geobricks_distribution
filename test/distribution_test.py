@@ -28,7 +28,7 @@ json_request = {
             "type": "database",
             "options": {
                 "db": "spatial",    #optional
-                "layer": "gaul0_3857",   # required (table or table alias)
+                "layer": "gaul0_2015_4326",   # required (table or table alias)
                 "column": "adm0_name", # required (column or column_alias)
                 "codes": ["Italy"]
             }
