@@ -41,6 +41,7 @@ class Distribution():
             if distribution_folder is None:
                 # turning relative to absolute path if required
                 if not os.path.isabs(self.config["settings"]["folders"]["distribution"]):
+                    print self.config["settings"]["folders"]["distribution"]
                     self.config["settings"]["folders"]["distribution"] = os.path.abspath(self.config["settings"]["folders"]["distribution"])
                 distribution_folder = self.config["settings"]["folders"]["distribution"]
             if not os.path.isdir(distribution_folder):

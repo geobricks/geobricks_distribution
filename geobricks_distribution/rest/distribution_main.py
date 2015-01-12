@@ -11,7 +11,7 @@ app = Flask(__name__)
 cors = CORS(app, resources={r'/*': {'origins': '*'}})
 
 # Url blueprint prefix
-url_prefix = "/geobricks_distribution"
+url_prefix = "/distribution"
 
 # Core services.
 app.register_blueprint(distribution_rest.app, url_prefix=url_prefix)
@@ -20,6 +20,7 @@ app.register_blueprint(distribution_rest.app, url_prefix=url_prefix)
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.INFO)
 
+
 # Start Flask server
 if __name__ == '__main__':
-    app.run(host=config['host'], port=config['port'], debug=config['debug'], threaded=True)
+    app.run(host=config['settings']['host'], port=config['settings']['port'], debug=config['settings']['debug'], threaded=True)

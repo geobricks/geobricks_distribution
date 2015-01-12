@@ -1,5 +1,7 @@
 import unittest
 import os
+import requests
+import simplejson
 from geobricks_distribution.config.config import config
 from geobricks_distribution.core.distribution_core import Distribution
 
@@ -39,9 +41,23 @@ class GeobricksTest(unittest.TestCase):
 
     distribution = Distribution(config)
 
-    def test_distribution_geoserver(self):
+    def test_distribution(self):
         result = self.distribution.export_raster_by_spatial_query(json_request)
         self.assertEqual(os.path.isfile(result), True)
+
+    def test_distribution_raster_spatialquery_rest(self):
+        headers = {'content-type': 'application/json'}
+        data = simplejson.dumps(json_request)
+        r = requests.post("http://localhost:5904/distribution/rasters/spatialquery/", data=data, headers=headers)
+        self.assertIsNotNone(200, r.status_code)
+
+    def test_distribution_download_rest(self):
+        headers = {'content-type': 'application/json'}
+        data = simplejson.dumps(json_request)
+        r = requests.post("http://localhost:5904/distribution/rasters/spatialquery/", data=data, headers=headers)
+        uid = simplejson.loads(simplejson.loads(r.text))
+        r = requests.get( uid["url"])
+        self.assertIsNotNone(200, r.status_code)
 
 
 if __name__ == '__main__':

@@ -2,6 +2,7 @@ import logging
 
 config = {
     "settings": {
+
         # To be used by Flask: DEVELOPMENT ONLY
         "debug": True,
 
@@ -20,7 +21,7 @@ config = {
 
         #folders
         "folders": {
-            "distribution": "../test_data/distribution/",
+            "distribution": "../../test_data/distribution/",
         },
 
         # Database
@@ -28,16 +29,13 @@ config = {
             # Spatial Database
             "spatial": {
                 # default_db will search in the dbs["database"] as default option
-                "dbname": "fenix",
+                "dbname": "db",
                 "host": "localhost",
                 "port": "5432",
                 "username": "usr",
                 "password": "pwd",
-                "schema": "public",
+                "schema": "spatial",
             }
         }
     }
 }
-#
-# config = merge_config_from_file(config)
-# print config
