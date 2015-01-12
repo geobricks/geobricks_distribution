@@ -35,8 +35,8 @@ class Distribution():
         self.config = config
 
     def export_raster_by_spatial_query(self, user_json, distribution_url=None, distribution_folder=None):
-        print user_json
-        print self.config
+        log.info(user_json)
+        log.info(self.config)
         try:
             if distribution_folder is None:
                 # turning relative to absolute path if required
@@ -57,6 +57,8 @@ class Distribution():
         email_address = None if "email_address" not in user_json else user_json["email_address"]
         rasters = user_json["raster"]
 
+        log.info(rasters)
+
 
         # create a random tmp folder
         zip_folder_id = str(uuid.uuid4()).encode("utf-8")
@@ -69,9 +71,12 @@ class Distribution():
 
         output_files = []
         for raster in rasters:
+            log.info(raster)
             raster_path = get_raster_path(raster)
+            log.info(raster_path)
             # turning relative to absolute path if required
             if not os.path.isabs(raster_path):
+                log.info(raster_path)
                 raster_path = os.path.abspath(raster_path)
             log.info(raster_path)
             srid = get_srid(raster_path)

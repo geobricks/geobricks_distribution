@@ -47,8 +47,8 @@ def discovery():
     return Response(json.dumps(out), content_type='application/json; charset=utf-8')
 
 
-@app.route('/rasters/spatialquery/', methods=['POST'])
-@app.route('/rasters/spatialquery', methods=['POST'])
+@app.route('/raster/spatialquery/', methods=['POST'])
+@app.route('/raster/spatialquery', methods=['POST'])
 @cross_origin(origins='*', headers=['Content-Type'])
 def get_rasters_spatial_query():
     try:

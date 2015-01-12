@@ -29,17 +29,16 @@ json_request = {
             "_path": "optional"
         }
     ],
-    "vector":
-        {
-             # Database
-            "type": "database",
-            "options": {
-                "db": "spatial",    #optional
-                "layer": "gaul0_2015_4326",   # required (table or table alias)
-                "column": "adm0_name", # required (column or column_alias)
-                "codes": ["Italy"]
-            }
+    "vector": {
+         # Database
+        "type": "database",
+        "options": {
+            "db": "spatial",    #optional
+            "layer": "gaul0_2015_4326",   # required (table or table alias)
+            "column": "adm0_name", # required (column or column_alias)
+            "codes": ["Italy"]
         }
+    }
 }
 
 class GeobricksTest(unittest.TestCase):
@@ -57,7 +56,7 @@ class GeobricksTest(unittest.TestCase):
             log.warn("Service is down. Please run rest/distribution_main.py to run the test")
         headers = {'content-type': 'application/json'}
         data = simplejson.dumps(json_request)
-        r = requests.post("http://localhost:5904/distribution/rasters/spatialquery/", data=data, headers=headers)
+        r = requests.post("http://localhost:5904/distribution/raster/spatialquery/", data=data, headers=headers)
         self.assertEqual(200, r.status_code)
 
     def test_distribution_download_rest(self):
@@ -68,7 +67,7 @@ class GeobricksTest(unittest.TestCase):
 
         headers = {'content-type': 'application/json'}
         data = simplejson.dumps(json_request)
-        r = requests.post("http://localhost:5904/distribution/rasters/spatialquery/", data=data, headers=headers)
+        r = requests.post("http://localhost:5904/distribution/raster/spatialquery/", data=data, headers=headers)
         uid = simplejson.loads(simplejson.loads(r.text))
         r = requests.get(uid["url"])
         self.assertEqual(200, r.status_code)
