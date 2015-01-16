@@ -73,9 +73,13 @@ class GeobricksTest(unittest.TestCase):
         self.assertEqual(200, r.status_code)
 
 
-if __name__ == '__main__':
+def run_test():
     suite = unittest.TestLoader().loadTestsFromTestCase(GeobricksTest)
     unittest.TextTestRunner(verbosity=2).run(suite)
+
+
+if __name__ == '__main__':
+    run_test()
 
 
 
