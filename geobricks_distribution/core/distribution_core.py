@@ -41,7 +41,8 @@ class Distribution():
             if distribution_folder is None:
                 # turning relative to absolute path if required
                 if not os.path.isabs(self.config["settings"]["folders"]["distribution"]):
-                    print self.config["settings"]["folders"]["distribution"]
+                    # raster_path = os.path.normpath(os.path.join(os.path.dirname(__file__), self.config["settings"]["folders"]["distribution"]))
+                    # TODO ABS PATH
                     self.config["settings"]["folders"]["distribution"] = os.path.abspath(self.config["settings"]["folders"]["distribution"])
                 distribution_folder = self.config["settings"]["folders"]["distribution"]
             if not os.path.isdir(distribution_folder):
@@ -75,7 +76,10 @@ class Distribution():
             raster_path = get_raster_path(raster)
             log.info(raster_path)
             # turning relative to absolute path if required
+            # TODO: handle somehow better (it is used just for test)
             if not os.path.isabs(raster_path):
+                # this is used to normalize relative path used during test
+                raster_path = os.path.normpath(os.path.join(os.path.dirname(__file__), raster_path))
                 log.info(raster_path)
                 raster_path = os.path.abspath(raster_path)
             log.info(raster_path)
