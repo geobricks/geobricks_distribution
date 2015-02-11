@@ -10,5 +10,7 @@ v0.1.8, 19-12-2014 -- Added GeobricksCore requirement.
 v0.1.9, 19-12-2014 -- Changed to GeobricksCommon dependency.
 v0.1.10, 27-12-2014 -- Changed to GeobricksCommon dependency.
 v0.1.11, 10-01-2015 -- Changed to GeobricksCommon dependency.
+v0.1.12, 13-01-2015 -- Changed to GeobricksCommon dependency.
+v0.1.13, 13-01-2015 -- Changed to GeobricksCommon dependency.
 
 
