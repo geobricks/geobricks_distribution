@@ -63,6 +63,11 @@ class Distribution():
         sq = SpatialQuery(self.config)
 
         vector_filter = user_json["extract_by"]
+        db_options = vector_filter["options"]
+        db_datasource = db_options["db"]
+        layer_code = db_options["layer"]
+        column_code = db_options["column"]
+        codes = db_options["codes"]
         email_address = None if "email_address" not in user_json else user_json["email_address"]
         rasters = user_json["raster"]
 
@@ -94,11 +99,6 @@ class Distribution():
             log.info(srid)
 
             # retrieving bounding box
-            db_options = vector_filter["options"]
-            db_datasource = db_options["db"]
-            layer_code = db_options["layer"]
-            column_code = db_options["column"]
-            codes = db_options["codes"]
             bbox = sq.query_bbox(db_datasource, layer_code, column_code, codes, srid)
             log.info(bbox)
 
@@ -136,13 +136,7 @@ class Distribution():
             url = distribution_url + zip_folder_id
 
             # send email if email address
-            if email_address:
-                log.info("sending email to: %s" % email_address)
-                html = email_body.replace("{{LINK}}", url)
-                # TODO: handle exception
-                email_user = self.config["settings"]["email"]["user"]
-                email_password = self.config["settings"]["email"]["password"]
-                send_email(email_user, email_address, email_password, email_header, html)
+            self._send_email(url, email_address)
 
             return '{ "url" : "' + url + '"}'
 
@@ -214,123 +208,15 @@ class Distribution():
             url = distribution_url + zip_folder_id
 
             # send email if email address
-            if email_address:
-                log.info("sending email to: %s" % email_address)
-                html = email_body.replace("{{LINK}}", url)
-                # TODO: handle exception
-                email_user = self.config["settings"]["email"]["user"]
-                email_password = self.config["settings"]["email"]["password"]
-                send_email(email_user, email_address, email_password, email_header, html)
+            self._send_email(url, email_address)
 
             return '{ "url" : "' + url + '"}'
 
-
-
-
-
-
-
-
-# old method used to extract raster
-    def export_raster_by_spatial_query_old(self, user_json, distribution_url=None, distribution_folder=None):
-        try:
-            if distribution_folder is None:
-                distribution_folder = self.config["settings"]["folders"]["distribution"]
-            if not os.path.isdir(distribution_folder):
-                os.makedirs(distribution_folder)
-        except Exception, e:
-            log.error(e)
-            raise Exception(e)
-
-        # TODO remove dependency from here?
-        sq = SpatialQuery(self.config)
-        db_spatial = sq.get_db_instance()
-
-        # json passed by the user
-        json_filter = user_json["extract_by"]
-        email_address = None if "email_address" not in user_json else user_json["email_address"]
-
-        # create a random tmp folder
-        zip_folder_id = str(uuid.uuid4()).encode("utf-8")
-        zip_folder = os.path.join(distribution_folder, zip_folder_id)
-        os.mkdir(zip_folder)
-
-        # create a valid folder name to zip it
-        output_folder = os.path.join(zip_folder, "layers")
-        os.mkdir(output_folder)
-
-        output_files = []
-        # gets all the raster paths
-        log.info(user_json["raster"])
-        # raster_paths = get_raster_paths(user_json["raster"])
-        # raster_paths = get_raster_path(user_json["raster"])
-        # log.info(raster_paths)
-        for raster_path in user_json["raster"]:
-            log.info(raster_path)
-            authority_name, authority_code = get_authority(raster_path).upper().split(":")
-            log.info(authority_name, authority_code)
-            log.info(db_spatial.schema)
-            log.info(authority_name)
-            log.info(authority_code)
-
-            query_extent = json_filter["query_extent"]
-            query_layer = json_filter["query_layer"]
-
-            query_extent = query_extent.replace("{{SCHEMA}}", db_spatial.schema)
-            query_extent = query_extent.replace("{{SRID}}", authority_code)
-            query_layer = query_layer.replace("{{SCHEMA}}", db_spatial.schema)
-
-            # create the file on tm folder
-            filepath = crop_by_vector_database(raster_path, db_spatial, query_extent, query_layer)
-
-            # move file to distribution tmp folder
-            path, filename, name = get_filename(filepath, True)
-            dst_file = os.path.join(output_folder, filename)
-            move(filepath, dst_file)
-
-            # rename file based on uid layer_name (i.e. fenix:trmm_08_2014 -> trmm_08_2014)
-            output_filename = get_filename(raster_path) + ".tif"
-            output_file = os.path.join(output_folder, output_filename)
-            os.rename(dst_file, output_file)
-
-            # saving the output file to zip
-            output_files.append(output_file)
-
-        # zip folder or files
-        # TODO: change and use make_archive
-        #output_filename = os.path.join(zip_folder, zip_filename)
-        #make_archive(folder_to_zip, output_filename)
-        zip_path = zip_files(zip_filename, output_files, zip_folder)
-
-        # URL to the resource
-        if None:
-            return zip_path
-        else:
-            url = distribution_url + zip_folder_id
-
-            # send email if email address
-            if email_address:
-                log.info("sending email to: %s" % email_address)
-                html = email_body.replace("{{LINK}}", url)
-                # TODO: handle exception
-                email_user = self.config["settings"]["email"]["user"]
-                email_password = self.config["settings"]["email"]["password"]
-                send_email(email_user, email_address, email_password, email_header, html)
-
-            return '{ "url" : "' + url + '"}'
-
-
-# gets all the rasters paths in the filesystem
-# def get_raster_paths(data):
-#     paths = []
-#     if "uids" in data:
-#         for uid in data["uids"]:
-#             log.info(uid)
-#             paths.append(get_raster_path({"uid": uid}))
-#     if "ftp_uids" in data:
-#         for uid in data["ftp_uids"]:
-#             paths.append(get_raster_path({"uid": uid}))
-#     if "paths" in data:
-#         for path in data["paths"]:
-#             paths.append(path)
-#     return paths
+    def _send_email(self, url, email_address=None):
+        if email_address:
+            log.info("sending email to: %s" % email_address)
+            html = email_body.replace("{{LINK}}", url)
+            # TODO: handle exception
+            email_user = self.config["settings"]["email"]["user"]
+            email_password = self.config["settings"]["email"]["password"]
+            send_email(email_user, email_address, email_password, email_header, html)

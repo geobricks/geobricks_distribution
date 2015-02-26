@@ -71,11 +71,11 @@ json_request_export_vector_different_prj = {
         {
             "layerName": "gaul1_italy_malta_4326",
             "datasource": "storage",
-            },
+        },
         {
             "layerName": "gaul0_malta_4326",
             "datasource": "storage",
-            }
+        }
     ],
     "extract_by": {
         # Database
