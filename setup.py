@@ -14,7 +14,8 @@ setup(
         'flask',
         'GeobricksCommon',
         'GeobricksSpatialQuery',
-        "GeobricksGISRaster"
+        "GeobricksGISRaster",
+        "GeobricksGISVector"
     ],
     url='http://pypi.python.org/pypi/GeobricksDistribution/',
     keywords=['geobricks', 'stats', 'geostats', 'zonalstats', 'gis', 'statistics', 'geostatistics']
