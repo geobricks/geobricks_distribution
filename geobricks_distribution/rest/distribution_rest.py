@@ -63,6 +63,22 @@ def get_rasters_spatial_query():
         raise Exception(e)
 
 
+@app.route('/shp/spatialquery/', methods=['POST'])
+@app.route('/shp/spatialquery', methods=['POST'])
+@cross_origin(origins='*', headers=['Content-Type'])
+def get_vectors_spatial_query():
+    try:
+        user_json = request.get_json()
+        #TODO: handle it nicer the url to set the distribution download url
+        base_url = config["settings"]["base_url"] if "base_url" in config["settings"] else ""
+        distribution_url = request.host_url + base_url + "distribution/download/"
+        distribution = Distribution(config)
+        result = distribution.export_vector_by_spatial_query(user_json, distribution_url)
+        return Response(json.dumps(result), content_type='application/json; charset=utf-8')
+    except Exception, e:
+        raise Exception(e)
+
+
 @app.route('/download/<id>/', methods=['GET'])
 @app.route('/download/<id>', methods=['GET'])
 @cross_origin(origins='*', headers=['Content-Type'])
