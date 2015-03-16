@@ -11,7 +11,9 @@ setup(
     long_description=open('README.md').read(),
     description='Geobricks geospatial data distribution library.',
     install_requires=[
+        'watchdog',
         'flask',
+        'flask-cors',
         'GeobricksCommon',
         'GeobricksSpatialQuery',
         "GeobricksGISRaster",

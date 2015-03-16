@@ -1,4 +1,7 @@
 include *.md *.txt *.json
 recursive-include geobricks_distribution *
+recursive-exclude geobricks_distribution_test *
+recursive-exclude test_data *
+recursive-exclude examples *
 global-exclude *_dev.py
 global-exclude .gitignore

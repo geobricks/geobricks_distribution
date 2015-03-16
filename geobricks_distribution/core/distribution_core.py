@@ -164,6 +164,7 @@ class Distribution():
         for vector in vectors:
             vector_path = get_vector_path(vector)
             srid = get_srid_vector(vector_path)
+            #srid = "'merc'"
             log.info(srid)
 
             # get query

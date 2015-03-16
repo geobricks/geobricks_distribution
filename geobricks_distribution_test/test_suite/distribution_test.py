@@ -51,7 +51,7 @@ json_request_export_vector = {
         {
             "layerName": "gaul0_malta_4326",
             "datasource": "storage",
-            }
+        }
     ],
     "extract_by": {
         # Database
@@ -106,6 +106,8 @@ class GeobricksTest(unittest.TestCase):
         headers = {'content-type': 'application/json'}
         data = simplejson.dumps(json_request_export_raster)
         r = requests.post("http://localhost:5904/distribution/raster/spatialquery/", data=data, headers=headers)
+        print r.status_code
+        print r.text
         self.assertEqual(200, r.status_code)
 
     def test_distribution_download_rest(self):
